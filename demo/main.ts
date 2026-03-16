@@ -1,8 +1,8 @@
-import { cathode, grid, Box, Row, Col, Text, Table, BarChart, Tabs, palette } from '../src/index.js';
+import { tessera, grid, Box, Row, Col, Text, Table, BarChart, Tabs, palette } from '../src/index.js';
 import type { RenderResult, ClickRegion, ColorCell } from '../src/index.js';
 
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
-const app = cathode(canvas, { fontSize: 14 });
+const app = tessera(canvas, { fontSize: 14 });
 
 // state
 let activeTab = 0;
@@ -40,7 +40,7 @@ app.render = (cols: number, rows: number): RenderResult => {
   const colors: ColorCell[] = [];
 
   // header
-  grid.write(g, 1, 0, 'CATHODE DEMO');
+  grid.write(g, 1, 0, 'TESSERA DEMO');
 
   // tab bar at row 2
   const tabGrid = tabs.render(cols - 2, 1);
@@ -65,7 +65,7 @@ app.render = (cols: number, rows: number): RenderResult => {
 
   if (activeTab === 0) {
     // overview: two boxes side by side
-    const left = new Box('Status', new Text('All systems operational.\n\nCathode is a browser-canvas ASCII component framework.\nBuild retro terminal dashboards with zero dependencies.'));
+    const left = new Box('Status', new Text('All systems operational.\n\nTessera is a browser-canvas ASCII component framework.\nBuild retro terminal dashboards with zero dependencies.'));
     const right = new Box('Metrics', new Text('Uptime: 99.97%\nRequests: 1.2M\nLatency: 12ms p50\nErrors: 0.03%'));
     const layout = new Row([left, right]);
     const layoutGrid = layout.render(contentW, contentH);

@@ -12,7 +12,7 @@ export interface AppConfig extends ScreenConfig {
 /**
  * Top-level application container.
  *
- *   const app = cathode(canvas, { fontSize: 14 })
+ *   const app = tessera(canvas, { fontSize: 14 })
  *   app.render = (cols, rows) => { ... return { grid, clicks, colors } }
  *   app.start()
  *

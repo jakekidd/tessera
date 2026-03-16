@@ -1,7 +1,7 @@
 {
-  "name": "cathode",
+  "name": "tessera",
   "version": "0.1.0",
-  "description": "Browser-canvas ASCII component framework with retro terminal aesthetics",
+  "description": "Browser-canvas ASCII component framework. Each character cell is a tessera; compose them into mosaics.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

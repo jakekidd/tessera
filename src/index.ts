@@ -27,6 +27,6 @@ export type { BoxOptions, RowChild, ColChild, TableColumn, ChartData, BarChartOp
 export * as palette from './palette.js';
 
 /** Convenience: create an App from a canvas element */
-export function cathode(canvas: HTMLCanvasElement, config?: import('./app.js').AppConfig): import('./app.js').App {
+export function tessera(canvas: HTMLCanvasElement, config?: import('./app.js').AppConfig): import('./app.js').App {
   return new App(canvas, config);
 }
