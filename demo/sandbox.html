@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tessera sandbox</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0a0a; color: #c0c0c0; font-family: 'SF Mono', 'IBM Plex Mono', monospace; }
+    .container { display: flex; width: 100%; height: 100%; }
+    .editor { width: 50%; display: flex; flex-direction: column; border-right: 1px solid #333; }
+    .toolbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #333; background: #111; flex-shrink: 0; }
+    .toolbar select { background: #1a1a1a; color: #c0c0c0; border: 1px solid #444; padding: 4px 8px; font-family: inherit; font-size: 12px; border-radius: 3px; }
+    .toolbar button { background: #1a3a1a; color: #22c55e; border: 1px solid #22c55e44; padding: 4px 12px; font-family: inherit; font-size: 12px; cursor: pointer; border-radius: 3px; }
+    .toolbar button:hover { background: #224422; }
+    .toolbar .label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+    textarea { flex: 1; background: #0a0a0a; color: #c0c0c0; border: none; padding: 12px; font-family: inherit; font-size: 13px; line-height: 1.5; resize: none; outline: none; tab-size: 2; }
+    .preview { width: 50%; position: relative; }
+    .preview canvas { width: 100%; height: 100%; display: block; }
+    .error { position: absolute; bottom: 0; left: 0; right: 0; background: #1a0a0a; color: #ff4444; padding: 8px 12px; font-size: 12px; border-top: 1px solid #ff444444; display: none; max-height: 80px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="editor">
+      <div class="toolbar">
+        <span class="label">Sample</span>
+        <select id="samples"></select>
+        <button id="run">RUN</button>
+        <span class="label" style="margin-left:auto">tessera sandbox</span>
+      </div>
+      <textarea id="code" spellcheck="false"></textarea>
+    </div>
+    <div class="preview">
+      <canvas id="screen"></canvas>
+      <div id="error" class="error"></div>
+    </div>
+  </div>
+  <script type="module" src="./sandbox.ts"></script>
+</body>
+</html>

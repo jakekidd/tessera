@@ -1,100 +1,111 @@
-import { tessera, grid, Box, Row, Col, Text, Table, BarChart, Tabs, palette } from '../src/index.js';
+import { tessera, grid, Tabs, palette } from '../src/index.js';
 import type { RenderResult, ClickRegion, ColorCell } from '../src/index.js';
+import { basics } from './scenes/basics.js';
+import { dashboard } from './scenes/dashboard.js';
+import { streaming } from './scenes/streaming.js';
+import { catalog } from './scenes/catalog.js';
+import type { Scene } from './scenes/types.js';
 
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
 const app = tessera(canvas, { fontSize: 14 });
 
-// state
-let activeTab = 0;
-const tabNames = ['OVERVIEW', 'CHART', 'TABLE'];
+const scenes: Scene[] = [basics, dashboard, streaming, catalog];
+let activeScene = 0;
 
-const tabs = new Tabs(tabNames, activeTab, (index) => {
-  activeTab = index;
-  app.update();
+const sceneTabs = new Tabs(scenes.map(s => s.name), 0, (i) => {
+  switchScene(i);
 });
 
-// sample data
-const chartData = {
-  labels: ['2025-01-01', '2025-01-02', '2025-01-03', '2025-01-04', '2025-01-05',
-           '2025-01-06', '2025-01-07', '2025-01-08', '2025-01-09', '2025-01-10'],
-  values: [12, 45, 23, 67, 34, 89, 56, 78, 42, 91],
-};
-
-const tableColumns = [
-  { header: 'NAME', flex: 2 },
-  { header: 'STATUS', width: 12, align: 'center' as const },
-  { header: 'VALUE', width: 10, align: 'right' as const },
-];
-
-const tableData = [
-  ['Alpha Service', 'ONLINE', '1,234'],
-  ['Beta Worker', 'ONLINE', '567'],
-  ['Gamma Cache', 'DEGRADED', '89'],
-  ['Delta Queue', 'ONLINE', '2,345'],
-  ['Epsilon Store', 'OFFLINE', '0'],
-];
+function switchScene(index: number): void {
+  scenes[activeScene].stop();
+  activeScene = index;
+  sceneTabs.setActive(index);
+  scenes[activeScene].start(() => app.update());
+  app.update();
+}
 
 app.render = (cols: number, rows: number): RenderResult => {
   const g = grid.create(cols, rows);
   const clicks: ClickRegion[] = [];
   const colors: ColorCell[] = [];
 
-  // header
-  grid.write(g, 1, 0, 'TESSERA DEMO');
-
-  // tab bar at row 2
-  const tabGrid = tabs.render(cols - 2, 1);
-  grid.overlay(g, tabGrid, 1, 2);
-
-  // tab hit region
-  clicks.push({
-    x: 1, y: 2, w: cols - 2, h: 1,
-    handler: () => {},
-    cursor: 'pointer',
-  });
-
-  // color the header
-  for (let i = 0; i < 12; i++) {
+  // title
+  const title = 'TESSERA';
+  grid.write(g, 1, 0, title);
+  for (let i = 0; i < title.length; i++) {
     colors.push({ col: 1 + i, row: 0, color: palette.BLUE });
   }
 
-  // content area
-  const contentY = 4;
-  const contentH = rows - contentY - 1;
-  const contentW = cols - 2;
+  // scene tabs
+  const tabX = title.length + 3;
+  const tabGrid = sceneTabs.render(cols - tabX - 1, 1);
+  grid.overlay(g, tabGrid, tabX, 0);
+  clicks.push({ x: tabX, y: 0, w: cols - tabX - 1, h: 1, handler: () => {}, cursor: 'pointer' });
 
-  if (activeTab === 0) {
-    // overview: two boxes side by side
-    const left = new Box('Status', new Text('All systems operational.\n\nTessera is a browser-canvas ASCII component framework.\nBuild retro terminal dashboards with zero dependencies.'));
-    const right = new Box('Metrics', new Text('Uptime: 99.97%\nRequests: 1.2M\nLatency: 12ms p50\nErrors: 0.03%'));
-    const layout = new Row([left, right]);
-    const layoutGrid = layout.render(contentW, contentH);
-    grid.overlay(g, layoutGrid, 1, contentY);
-  } else if (activeTab === 1) {
-    // chart
-    const box = new Box('Daily Volume', new BarChart(chartData));
-    grid.overlay(g, box.render(contentW, contentH), 1, contentY);
-  } else {
-    // table
-    const box = new Box('Services', new Table(tableColumns, tableData));
-    grid.overlay(g, box.render(contentW, contentH), 1, contentY);
+  // content area
+  const contentY = 2;
+  const contentW = cols - 2;
+  const contentH = rows - contentY - 1;
+
+  const scene = scenes[activeScene];
+  const result = scene.render(contentW, contentH);
+  grid.overlay(g, result.grid, 1, contentY);
+
+  // merge scene overlays with offset
+  const vectors = (result.vectors ?? []).map(v => ({
+    ...v,
+    points: v.points.map(p => ({ col: p.col + 1, row: p.row + contentY })),
+  }));
+  const rects = (result.rects ?? []).map(r => ({ ...r, col: r.col + 1, row: r.row + contentY }));
+  const texts = (result.texts ?? []).map(t => ({ ...t, col: t.col + 1, row: t.row + contentY }));
+  for (const c of result.colors ?? []) {
+    colors.push({ ...c, col: c.col + 1, row: c.row + contentY });
+  }
+  for (const cl of result.clicks ?? []) {
+    clicks.push({ ...cl, x: cl.x + 1, y: cl.y + contentY });
   }
 
   // footer
-  grid.write(g, 1, rows - 1, `${cols}x${rows}`);
-  for (let i = 0; i < `${cols}x${rows}`.length; i++) {
+  const footer = `${cols}x${rows}`;
+  grid.write(g, 1, rows - 1, footer);
+  for (let i = 0; i < footer.length; i++) {
     colors.push({ col: 1 + i, row: rows - 1, color: palette.GRAY });
   }
 
-  return { grid: g, clicks, colors };
+  return { grid: g, clicks, colors, vectors, rects, texts };
 };
 
-// route clicks to tabs
+// route clicks
 app.screen.onClick((col, row) => {
-  if (row === 2 && col >= 1) {
-    tabs.hitTest(col - 1, 0);
+  // scene tab bar
+  if (row === 0 && col >= title.length + 3) {
+    sceneTabs.hitTest(col - (title.length + 3), 0);
+    app.update();
+    return;
+  }
+  // delegate to scene
+  const contentY = 2;
+  if (row >= contentY) {
+    scenes[activeScene].click?.(col - 1, row - contentY, col - 1, row - contentY);
     app.update();
   }
 });
 
+const title = 'TESSERA';
+
+// keyboard
+app.onKey((e) => {
+  scenes[activeScene].key?.(e);
+});
+
+// start first scene
+scenes[activeScene].start(() => app.update());
 app.start();
+
+// HMR cleanup
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    scenes[activeScene].stop();
+    app.destroy();
+  });
+}

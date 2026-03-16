@@ -1,4 +1,4 @@
-import type { CharGrid } from './types.js';
+import type { CharGrid, Component, ComponentOverlays, VectorLine, VectorRect, VectorText, ColorCell, ClickRegion } from './types.js';
 
 /** Create an empty grid filled with spaces */
 export function create(width: number, height: number, fill = ' '): CharGrid {
@@ -118,4 +118,42 @@ export function padLeft(text: string, width: number): string {
 export function padRight(text: string, width: number): string {
   if (text.length >= width) return text;
   return text + ' '.repeat(width - text.length);
+}
+
+/**
+ * Collect vector overlays from a component (and its children) with coordinate offsets applied.
+ * Use after rendering a component tree to gather all vectors, rects, texts, colors, and clicks.
+ */
+export function collectOverlays(
+  component: Component,
+  offsetX: number,
+  offsetY: number,
+): { vectors: VectorLine[]; rects: VectorRect[]; texts: VectorText[]; colors: ColorCell[]; clicks: ClickRegion[] } {
+  const result: { vectors: VectorLine[]; rects: VectorRect[]; texts: VectorText[]; colors: ColorCell[]; clicks: ClickRegion[] } = {
+    vectors: [], rects: [], texts: [], colors: [], clicks: [],
+  };
+
+  const ov = component.overlays;
+  if (!ov) return result;
+
+  for (const v of ov.vectors ?? []) {
+    result.vectors.push({
+      ...v,
+      points: v.points.map(p => ({ col: p.col + offsetX, row: p.row + offsetY })),
+    });
+  }
+  for (const r of ov.rects ?? []) {
+    result.rects.push({ ...r, col: r.col + offsetX, row: r.row + offsetY });
+  }
+  for (const t of ov.texts ?? []) {
+    result.texts.push({ ...t, col: t.col + offsetX, row: t.row + offsetY });
+  }
+  for (const c of ov.colors ?? []) {
+    result.colors.push({ ...c, col: c.col + offsetX, row: c.row + offsetY });
+  }
+  for (const cl of ov.clicks ?? []) {
+    result.clicks.push({ ...cl, x: cl.x + offsetX, y: cl.y + offsetY });
+  }
+
+  return result;
 }

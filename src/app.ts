@@ -1,4 +1,4 @@
-import type { CharGrid, ClickRegion, ColorCell, VectorLine, VectorText, RenderResult } from './types.js';
+import type { CharGrid, ClickRegion, ColorCell, VectorLine, VectorRect, VectorText, RenderResult } from './types.js';
 import { Screen } from './screen.js';
 import type { ScreenConfig } from './screen.js';
 
@@ -28,6 +28,7 @@ export class App {
   private clicks: ClickRegion[] = [];
   private colors: ColorCell[] = [];
   private vectors: VectorLine[] = [];
+  private rects: VectorRect[] = [];
   private texts: VectorText[] = [];
   private lastGrid: CharGrid | null = null;
   private hoverEnabled: boolean;
@@ -74,6 +75,7 @@ export class App {
     this.clicks = result.clicks ?? [];
     this.colors = result.colors ?? [];
     this.vectors = result.vectors ?? [];
+    this.rects = result.rects ?? [];
     this.texts = result.texts ?? [];
 
     // update cursor based on hover over click regions
@@ -104,6 +106,7 @@ export class App {
     });
 
     // vector overlays
+    if (this.rects.length > 0) this.screen.drawRects(this.rects);
     if (this.vectors.length > 0) this.screen.drawVectors(this.vectors);
     if (this.texts.length > 0) this.screen.drawTexts(this.texts);
   }
@@ -123,6 +126,11 @@ export class App {
   dump(): string {
     if (!this.lastGrid) return '';
     return this.lastGrid.map(row => row.join('')).join('\n');
+  }
+
+  /** Copy the ASCII grid as text. Graph/chart areas appear as blank space. */
+  copy(): string {
+    return this.dump();
   }
 
   /** Clean up event listeners */

@@ -1,4 +1,4 @@
-import type { CharGrid, VectorLine, VectorText } from './types.js';
+import type { CharGrid, VectorLine, VectorRect, VectorText } from './types.js';
 import { FG, BG } from './palette.js';
 
 export interface ScreenConfig {
@@ -160,6 +160,37 @@ export class Screen {
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
       }
       ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  /** Draw filled rectangles on canvas */
+  public drawRects(rects: VectorRect[]): void {
+    if (rects.length === 0) return;
+    const ctx = this.ctx;
+    ctx.save();
+
+    for (const rect of rects) {
+      const x = rect.col * this.charWidth;
+      const y = rect.row * this.charHeight;
+      const w = rect.w * this.charWidth;
+      const h = rect.h * this.charHeight;
+      const glow = rect.glow ?? 0;
+
+      if (glow > 0) {
+        ctx.shadowColor = rect.color;
+        ctx.shadowBlur = glow;
+        ctx.fillStyle = rect.color;
+        ctx.globalAlpha = 0.5;
+        ctx.fillRect(x, y, w, h);
+      }
+
+      ctx.shadowColor = 'transparent';
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = rect.color;
+      ctx.globalAlpha = 1;
+      ctx.fillRect(x, y, w, h);
     }
 
     ctx.restore();

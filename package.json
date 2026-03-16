@@ -16,11 +16,15 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "demo": "vite demo",
-    "demo:build": "vite build demo"
+    "demo:build": "vite build --config demo/vite.config.ts",
+    "docs": "vitepress dev docs",
+    "docs:build": "vite build --config demo/vite.config.ts && vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "typescript": "~5.9.3",
-    "vite": "^7.2.2"
+    "vite": "^7.2.2",
+    "vitepress": "^1.6.3"
   },
   "license": "MIT",
   "keywords": ["tui", "terminal", "canvas", "ascii", "retro", "dashboard", "ui"]

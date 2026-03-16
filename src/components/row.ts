@@ -1,4 +1,4 @@
-import type { CharGrid, Component } from '../types.js';
+import type { CharGrid, Component, ComponentOverlays, VectorLine, VectorRect, VectorText, ColorCell, ClickRegion } from '../types.js';
 import * as grid from '../grid.js';
 
 export interface RowChild {
@@ -8,6 +8,7 @@ export interface RowChild {
 }
 
 export class Row implements Component {
+  overlays: ComponentOverlays = {};
   private children: RowChild[];
 
   constructor(children: (Component | RowChild)[]) {
@@ -18,7 +19,16 @@ export class Row implements Component {
 
   render(width: number, height: number): CharGrid {
     const g = grid.create(width, height);
-    if (this.children.length === 0) return g;
+    const vectors: VectorLine[] = [];
+    const rects: VectorRect[] = [];
+    const texts: VectorText[] = [];
+    const colors: ColorCell[] = [];
+    const clicks: ClickRegion[] = [];
+
+    if (this.children.length === 0) {
+      this.overlays = {};
+      return g;
+    }
 
     const widths = this.distribute(width);
     let x = 0;
@@ -30,9 +40,30 @@ export class Row implements Component {
         if ('bounds' in child.component) {
           (child.component as { bounds: unknown }).bounds = { x, y: 0, w, h: height };
         }
+        // propagate child overlays with x offset
+        const co = child.component.overlays;
+        if (co) {
+          for (const v of co.vectors ?? []) {
+            vectors.push({ ...v, points: v.points.map(p => ({ col: p.col + x, row: p.row })) });
+          }
+          for (const r of co.rects ?? []) {
+            rects.push({ ...r, col: r.col + x });
+          }
+          for (const t of co.texts ?? []) {
+            texts.push({ ...t, col: t.col + x });
+          }
+          for (const c of co.colors ?? []) {
+            colors.push({ ...c, col: c.col + x });
+          }
+          for (const cl of co.clicks ?? []) {
+            clicks.push({ ...cl, x: cl.x + x });
+          }
+        }
       }
       x += w;
     }
+
+    this.overlays = { vectors, rects, texts, colors, clicks };
     return g;
   }
 

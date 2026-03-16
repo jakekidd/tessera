@@ -1,0 +1,215 @@
+import type { CharGrid, Component, ComponentOverlays, Series, VectorLine, VectorText, ColorCell } from '../types.js';
+import * as grid from '../grid.js';
+import { AXIS } from '../palette.js';
+
+export interface LineGraphOptions {
+  /** Labels for the x-axis. Defaults to index numbers. */
+  xLabels?: string[];
+  /** Minimum y value. Auto-calculated if not set. */
+  yMin?: number;
+  /** Maximum y value. Auto-calculated if not set. */
+  yMax?: number;
+  /** Number of y-axis ticks (default 5) */
+  yTicks?: number;
+  /** Show ASCII legend (default true) */
+  legend?: boolean;
+  /** Legend position (default 'top') */
+  legendPosition?: 'top' | 'bottom';
+  /** Line glow radius (default 6) */
+  glow?: number;
+  /** Line width (default 1.5) */
+  lineWidth?: number;
+  /** Show horizontal grid lines (default false) */
+  gridLines?: boolean;
+  /** Chart style (default 'line') */
+  style?: 'line' | 'step';
+}
+
+export class LineGraph implements Component {
+  overlays: ComponentOverlays = {};
+  private series: Series[];
+  private options: LineGraphOptions;
+
+  constructor(series: Series[], options?: LineGraphOptions) {
+    this.series = series;
+    this.options = options ?? {};
+  }
+
+  render(width: number, height: number): CharGrid {
+    const g = grid.create(width, height);
+    const vectors: VectorLine[] = [];
+    const texts: VectorText[] = [];
+    const colors: ColorCell[] = [];
+
+    if (width < 10 || height < 6 || this.series.length === 0) {
+      this.overlays = { vectors, texts, colors };
+      return g;
+    }
+
+    const showLegend = this.options.legend ?? true;
+    const legendPos = this.options.legendPosition ?? 'top';
+    const glow = this.options.glow ?? 6;
+    const lineWidth = this.options.lineWidth ?? 1.5;
+    const style = this.options.style ?? 'line';
+
+    // layout
+    let legendH = 0;
+    if (showLegend && this.series.length > 0) {
+      legendH = 1;
+      const legendY = legendPos === 'top' ? 0 : height - 1;
+      this.renderLegend(g, 0, legendY, width, colors);
+    }
+
+    const chartTop = legendPos === 'top' ? legendH + (legendH > 0 ? 1 : 0) : 0;
+    const chartBottom = legendPos === 'bottom' ? height - legendH - 2 : height - 2;
+    const chartH = chartBottom - chartTop;
+
+    // y-axis label width: measure the formatted max value
+    const allValues = this.series.flatMap(s => s.values);
+    let yMin = this.options.yMin ?? Math.min(...allValues);
+    let yMax = this.options.yMax ?? Math.max(...allValues);
+    if (yMin === yMax) { yMin -= 1; yMax += 1; }
+    const yRange = yMax - yMin;
+
+    const yLabelW = Math.max(
+      this.formatValue(yMin).length,
+      this.formatValue(yMax).length,
+    ) + 1;
+    const chartLeft = yLabelW + 1;
+    const chartRight = width - 1;
+    const chartW = chartRight - chartLeft;
+
+    if (chartH < 3 || chartW < 5) {
+      this.overlays = { vectors, texts, colors };
+      return g;
+    }
+
+    // y-axis ticks + labels
+    const yTicks = this.options.yTicks ?? 5;
+    for (let i = 0; i <= yTicks; i++) {
+      const val = yMin + (yRange * i / yTicks);
+      const row = chartBottom - (chartH * i / yTicks);
+      texts.push({
+        col: chartLeft - 1.5,
+        row: row + 0.5,
+        text: this.formatValue(val),
+        color: '#666666',
+        align: 'right',
+        baseline: 'middle',
+        fontSize: 11,
+      });
+
+      // y-axis tick mark
+      vectors.push({
+        points: [
+          { col: chartLeft - 0.8, row: row + 0.5 },
+          { col: chartLeft - 0.3, row: row + 0.5 },
+        ],
+        color: AXIS, width: 1, glow: 0,
+      });
+
+      // grid line
+      if (this.options.gridLines && i > 0 && i < yTicks) {
+        vectors.push({
+          points: [
+            { col: chartLeft, row: row + 0.5 },
+            { col: chartRight, row: row + 0.5 },
+          ],
+          color: '#1a1a1a', width: 0.5, glow: 0,
+        });
+      }
+    }
+
+    // axes
+    vectors.push({
+      points: [
+        { col: chartLeft - 0.5, row: chartTop },
+        { col: chartLeft - 0.5, row: chartBottom + 0.3 },
+      ],
+      color: AXIS, width: 1, glow: 0,
+    });
+    vectors.push({
+      points: [
+        { col: chartLeft - 0.5, row: chartBottom + 0.3 },
+        { col: chartRight + 0.3, row: chartBottom + 0.3 },
+      ],
+      color: AXIS, width: 1, glow: 0,
+    });
+
+    // x-axis labels
+    const maxPoints = Math.max(...this.series.map(s => s.values.length));
+    const xLabels = this.options.xLabels ?? Array.from({ length: maxPoints }, (_, i) => String(i));
+    const xLabelRow = chartBottom + 0.8;
+    const labelEvery = Math.max(1, Math.ceil(xLabels.length / Math.floor(chartW / 6)));
+
+    for (let i = 0; i < xLabels.length; i += labelEvery) {
+      const col = chartLeft + (chartW * i / (maxPoints - 1 || 1));
+      // tick mark
+      vectors.push({
+        points: [
+          { col, row: chartBottom + 0.3 },
+          { col, row: chartBottom + 0.7 },
+        ],
+        color: AXIS, width: 1, glow: 0,
+      });
+      texts.push({
+        col,
+        row: xLabelRow,
+        text: xLabels[i],
+        color: '#666666',
+        align: 'center',
+        baseline: 'top',
+        fontSize: 11,
+      });
+    }
+
+    // data series
+    for (const s of this.series) {
+      if (s.values.length < 2) continue;
+      const points: Array<{ col: number; row: number }> = [];
+
+      for (let i = 0; i < s.values.length; i++) {
+        const col = chartLeft + (chartW * i / (s.values.length - 1 || 1));
+        const row = chartBottom - (chartH * (s.values[i] - yMin) / yRange);
+
+        if (style === 'step' && points.length > 0) {
+          // horizontal step to new x at old y
+          points.push({ col, row: points[points.length - 1].row });
+        }
+        points.push({ col, row });
+      }
+
+      vectors.push({
+        points,
+        color: s.color,
+        width: lineWidth,
+        glow,
+      });
+    }
+
+    this.overlays = { vectors, texts, colors };
+    return g;
+  }
+
+  private renderLegend(g: CharGrid, x: number, y: number, width: number, colors: ColorCell[]): void {
+    let cx = x;
+    for (const s of this.series) {
+      const entry = `-- ${s.label}`;
+      if (cx + entry.length + 2 > width) break;
+      grid.write(g, cx, y, entry);
+      colors.push({ col: cx, row: y, color: s.color });
+      colors.push({ col: cx + 1, row: y, color: s.color });
+      cx += entry.length + 3;
+    }
+  }
+
+  private formatValue(val: number): string {
+    if (Math.abs(val) >= 1_000_000) return (val / 1_000_000).toFixed(1) + 'M';
+    if (Math.abs(val) >= 10_000) return (val / 1_000).toFixed(0) + 'k';
+    if (Math.abs(val) >= 1_000) return (val / 1_000).toFixed(1) + 'k';
+    if (Number.isInteger(val)) return String(val);
+    return val.toFixed(1);
+  }
+
+  setData(series: Series[]): void { this.series = series; }
+}

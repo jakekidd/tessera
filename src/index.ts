@@ -2,7 +2,8 @@
 export type {
   CharGrid, Bounds, Component,
   ClickRegion, ColorCell,
-  BoxCharSet, VectorLine, VectorText,
+  BoxCharSet, VectorLine, VectorRect, VectorText,
+  ComponentOverlays, Series,
   RenderResult,
 } from './types.js';
 export { BoxChars } from './types.js';
@@ -20,8 +21,8 @@ export { App };
 export type { AppConfig } from './app.js';
 
 // Components
-export { Text, Box, Button, Row, Col, Tabs, Table, BarChart } from './components/index.js';
-export type { BoxOptions, RowChild, ColChild, TableColumn, ChartData, BarChartOptions } from './components/index.js';
+export { Text, Box, Button, Row, Col, Tabs, Table, BarChart, LineGraph, BarGraph } from './components/index.js';
+export type { BoxOptions, RowChild, ColChild, TableColumn, ChartData, BarChartOptions, LineGraphOptions, BarGraphOptions } from './components/index.js';
 
 // Palette
 export * as palette from './palette.js';

@@ -1,4 +1,4 @@
-import type { CharGrid, Component } from '../types.js';
+import type { CharGrid, Component, ComponentOverlays, VectorLine, VectorRect, VectorText, ColorCell, ClickRegion } from '../types.js';
 import * as grid from '../grid.js';
 
 export interface ColChild {
@@ -8,6 +8,7 @@ export interface ColChild {
 }
 
 export class Col implements Component {
+  overlays: ComponentOverlays = {};
   private children: ColChild[];
 
   constructor(children: (Component | ColChild)[]) {
@@ -18,7 +19,16 @@ export class Col implements Component {
 
   render(width: number, height: number): CharGrid {
     const g = grid.create(width, height);
-    if (this.children.length === 0) return g;
+    const vectors: VectorLine[] = [];
+    const rects: VectorRect[] = [];
+    const texts: VectorText[] = [];
+    const colors: ColorCell[] = [];
+    const clicks: ClickRegion[] = [];
+
+    if (this.children.length === 0) {
+      this.overlays = {};
+      return g;
+    }
 
     const heights = this.distribute(height);
     let y = 0;
@@ -30,9 +40,30 @@ export class Col implements Component {
         if ('bounds' in child.component) {
           (child.component as { bounds: unknown }).bounds = { x: 0, y, w: width, h };
         }
+        // propagate child overlays with y offset
+        const co = child.component.overlays;
+        if (co) {
+          for (const v of co.vectors ?? []) {
+            vectors.push({ ...v, points: v.points.map(p => ({ col: p.col, row: p.row + y })) });
+          }
+          for (const r of co.rects ?? []) {
+            rects.push({ ...r, row: r.row + y });
+          }
+          for (const t of co.texts ?? []) {
+            texts.push({ ...t, row: t.row + y });
+          }
+          for (const c of co.colors ?? []) {
+            colors.push({ ...c, row: c.row + y });
+          }
+          for (const cl of co.clicks ?? []) {
+            clicks.push({ ...cl, y: cl.y + y });
+          }
+        }
       }
       y += h;
     }
+
+    this.overlays = { vectors, rects, texts, colors, clicks };
     return g;
   }
 

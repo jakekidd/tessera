@@ -11,3 +11,7 @@ export { Table } from './table.js';
 export type { TableColumn } from './table.js';
 export { BarChart } from './chart.js';
 export type { ChartData, BarChartOptions } from './chart.js';
+export { LineGraph } from './line.js';
+export type { LineGraphOptions } from './line.js';
+export { BarGraph } from './vbar.js';
+export type { BarGraphOptions } from './vbar.js';

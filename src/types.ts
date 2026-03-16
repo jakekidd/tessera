@@ -9,10 +9,12 @@ export interface Bounds {
   h: number;
 }
 
-/** Base component interface. All cathode components implement this. */
+/** Base component interface. All tessera components implement this. */
 export interface Component {
   render(width: number, height: number): CharGrid;
   bounds?: Bounds;
+  /** Vector/color overlays produced during render. Propagated by layout containers. */
+  overlays?: ComponentOverlays;
   /** Optional click handler. Components with this are interactive. */
   onClick?(): void;
   /** Hit-test for click routing. Return true if (x,y) is inside this component. */
@@ -75,6 +77,16 @@ export interface VectorLine {
   cap?: 'round' | 'butt';
 }
 
+/** Canvas-drawn filled rectangle (not part of ASCII grid) */
+export interface VectorRect {
+  col: number;
+  row: number;
+  w: number;
+  h: number;
+  color: string;
+  glow?: number;
+}
+
 /** Canvas-drawn text label (not part of ASCII grid) */
 export interface VectorText {
   col: number;
@@ -86,11 +98,28 @@ export interface VectorText {
   baseline?: 'top' | 'middle' | 'bottom';
 }
 
+/** Overlays produced by a component during render (vectors, text, colors, clicks) */
+export interface ComponentOverlays {
+  vectors?: VectorLine[];
+  rects?: VectorRect[];
+  texts?: VectorText[];
+  colors?: ColorCell[];
+  clicks?: ClickRegion[];
+}
+
+/** Data series for graph components */
+export interface Series {
+  label: string;
+  values: number[];
+  color: string;
+}
+
 /** Result of rendering a component tree — returned by render functions */
 export interface RenderResult {
   grid: CharGrid;
   clicks?: ClickRegion[];
   colors?: ColorCell[];
   vectors?: VectorLine[];
+  rects?: VectorRect[];
   texts?: VectorText[];
 }
