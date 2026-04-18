@@ -1,7 +1,7 @@
 {
-  "name": "tessera",
+  "name": "graticule",
   "version": "0.1.0",
-  "description": "Browser-canvas ASCII component framework. Each character cell is a tessera; compose them into mosaics.",
+  "description": "Browser-canvas ASCII component framework. Zero dependencies. Render character grids, compose layouts, overlay vector graphics.",
   "author": "jakekidd",
   "license": "MIT",
   "type": "module",
@@ -16,11 +16,11 @@
   "files": ["dist", "src"],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jakekidd/tessera.git"
+    "url": "git+https://github.com/jakekidd/graticule.git"
   },
-  "homepage": "https://jakekidd.github.io/tessera/",
+  "homepage": "https://jakekidd.github.io/graticule/",
   "bugs": {
-    "url": "https://github.com/jakekidd/tessera/issues"
+    "url": "https://github.com/jakekidd/graticule/issues"
   },
   "scripts": {
     "build": "tsc",

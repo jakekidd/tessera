@@ -1,11 +1,11 @@
-# tessera()
+# graticule()
 
 Convenience function to create an `App` instance from a canvas element.
 
 ## Signature
 
 ```ts
-function tessera(canvas: HTMLCanvasElement, config?: AppConfig): App
+function graticule(canvas: HTMLCanvasElement, config?: AppConfig): App
 ```
 
 ## Parameters
@@ -36,9 +36,9 @@ An `App` instance.
 ## Example
 
 ```ts
-import { tessera } from 'tessera'
+import { graticule } from 'graticule'
 
-const app = tessera(document.getElementById('screen'), {
+const app = graticule(document.getElementById('screen'), {
   fontSize: 16,
   bg: '#000000',
 })

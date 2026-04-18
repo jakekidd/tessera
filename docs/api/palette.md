@@ -3,7 +3,7 @@
 Named color constants for consistent styling.
 
 ```ts
-import { palette } from 'tessera'
+import { palette } from 'graticule'
 ```
 
 ## Colors

@@ -1,13 +1,13 @@
 # Styling
 
-Tessera provides several styling mechanisms: per-cell colors, box-drawing character sets, the palette module, and canvas-level vector overlays.
+Graticule provides several styling mechanisms: per-cell colors, box-drawing character sets, the palette module, and canvas-level vector overlays.
 
 ## Per-Cell Colors
 
 Return `ColorCell` entries in your `RenderResult` to override the color of specific characters:
 
 ```ts
-import { palette } from 'tessera'
+import { palette } from 'graticule'
 
 app.render = (cols, rows) => {
   const g = grid.create(cols, rows)
@@ -27,7 +27,7 @@ app.render = (cols, rows) => {
 The `palette` module exports named color constants:
 
 ```ts
-import { palette } from 'tessera'
+import { palette } from 'graticule'
 
 palette.BLUE    // '#4169E1'
 palette.GREEN   // '#22c55e'
@@ -52,7 +52,7 @@ palette.BG      // '#0a0a0a'
 Four built-in box-drawing character sets:
 
 ```ts
-import { BoxChars } from 'tessera'
+import { BoxChars } from 'graticule'
 
 BoxChars.single   // ┌─┐│└─┘  (default)
 BoxChars.double   // ╔═╗║╚═╝

@@ -8,7 +8,7 @@ Top-level application container. Owns the render loop, routes clicks, tracks hov
 new App(canvas: HTMLCanvasElement, config?: AppConfig)
 ```
 
-Usually created via [`tessera()`](./tessera).
+Usually created via [`graticule()`](./graticule).
 
 ## Properties
 
@@ -70,7 +70,7 @@ Clean up event listeners.
 ## Example
 
 ```ts
-const app = tessera(canvas, { fontSize: 14 })
+const app = graticule(canvas, { fontSize: 14 })
 
 let count = 0
 

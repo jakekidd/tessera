@@ -3,7 +3,7 @@
 The `grid` module provides functions for creating and manipulating character grids.
 
 ```ts
-import { grid } from 'tessera'
+import { grid } from 'graticule'
 ```
 
 ## Creating Grids

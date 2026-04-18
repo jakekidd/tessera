@@ -53,7 +53,7 @@ export const basics: Scene = {
     const ch = h - cy;
 
     if (activeTab === 0) {
-      const left = new Box('Status', new Text('All systems operational.\n\nTessera is a browser-canvas ASCII\ncomponent framework. Build retro\nterminal dashboards with zero deps.'));
+      const left = new Box('Status', new Text('All systems operational.\n\nGraticule is a browser-canvas ASCII\ncomponent framework. Build retro\nterminal dashboards with zero deps.'));
       const right = new Box('Metrics', new Text('Uptime: 99.97%\nRequests: 1.2M\nLatency: 12ms p50\nErrors: 0.03%'));
       grid.overlay(g, new Row([left, right]).render(w, ch), 0, cy);
     } else if (activeTab === 1) {

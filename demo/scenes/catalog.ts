@@ -13,8 +13,8 @@ function lbl(g: string[][], x: number, y: number, text: string, colors: ColorCel
 }
 
 function renderText(g: string[][], x: number, y: number, w: number, colors: ColorCell[]): void {
-  lbl(g, x, y, 'new Text("Hello, Tessera!")', colors);
-  grid.overlay(g, new Text('Hello, Tessera!').render(w, 1), x, y + 1);
+  lbl(g, x, y, 'new Text("Hello, Graticule!")', colors);
+  grid.overlay(g, new Text('Hello, Graticule!').render(w, 1), x, y + 1);
   lbl(g, x, y + 3, 'new Text("Centered text", "center")', colors);
   grid.overlay(g, new Text('Centered text', 'center').render(w, 1), x, y + 4);
   lbl(g, x, y + 6, 'new Text("Right-aligned", "right")', colors);

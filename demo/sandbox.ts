@@ -1,5 +1,5 @@
 import {
-  tessera, grid, Box, Row, Col, Text, Table, BarChart,
+  graticule, grid, Box, Row, Col, Text, Table, BarChart,
   LineGraph, BarGraph, Button, Tabs, palette, BoxChars,
 } from '../src/index.js';
 import type { App } from '../src/index.js';
@@ -15,7 +15,7 @@ const errorEl = document.getElementById('error') as HTMLDivElement;
 const samples: Record<string, string> = {
   'Hello World': `app.render = (cols, rows) => {
   const g = grid.create(cols, rows)
-  const box = new Box('Hello', new Text('Welcome to Tessera!\\n\\nEdit this code and click RUN.'))
+  const box = new Box('Hello', new Text('Welcome to Graticule!\\n\\nEdit this code and click RUN.'))
   grid.overlay(g, box.render(cols, rows), 0, 0)
   return { grid: g }
 }
@@ -26,7 +26,7 @@ app.start()`,
   const colors = []
 
   const layout = new Col([
-    { component: new Box('Header', new Text('Tessera Layout Demo', 'center')), height: 5 },
+    { component: new Box('Header', new Text('Graticule Layout Demo', 'center')), height: 5 },
     {
       component: new Row([
         { component: new Box('Sidebar', new Text('Navigation\\n\\n- Home\\n- About\\n- Contact')), width: 24 },
@@ -63,7 +63,7 @@ const data = [
 
 app.render = (cols, rows) => {
   const g = grid.create(cols, rows)
-  grid.write(g, 1, 0, 'TESSERA COMPONENTS')
+  grid.write(g, 1, 0, 'GRATICULE COMPONENTS')
   const table = new Box('Component Registry', new Table(columns, data))
   grid.overlay(g, table.render(cols - 2, rows - 2), 1, 2)
   const colors = []
@@ -201,18 +201,18 @@ function execute(code: string): void {
   };
 
   try {
-    const app = tessera(canvas, { fontSize: 14 });
+    const app = graticule(canvas, { fontSize: 14 });
     currentApp = app;
 
     const fn = new Function(
-      'app', 'tessera', 'grid', 'Box', 'Row', 'Col', 'Text', 'Table',
+      'app', 'graticule', 'grid', 'Box', 'Row', 'Col', 'Text', 'Table',
       'BarChart', 'LineGraph', 'BarGraph', 'Tabs', 'Button', 'palette', 'BoxChars',
       'setInterval', 'clearInterval',
       code,
     );
 
     fn(
-      app, tessera, grid, Box, Row, Col, Text, Table,
+      app, graticule, grid, Box, Row, Col, Text, Table,
       BarChart, LineGraph, BarGraph, Tabs, Button, palette, BoxChars,
       trackedSetInterval, origClearInterval,
     );

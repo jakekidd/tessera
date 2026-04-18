@@ -9,7 +9,7 @@ export interface Bounds {
   h: number;
 }
 
-/** Base component interface. All tessera components implement this. */
+/** Base component interface. All graticule components implement this. */
 export interface Component {
   render(width: number, height: number): CharGrid;
   bounds?: Bounds;

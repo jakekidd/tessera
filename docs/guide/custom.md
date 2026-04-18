@@ -20,8 +20,8 @@ Only `render()` is required. The optional members enable interactivity.
 A progress bar component:
 
 ```ts
-import { grid } from 'tessera'
-import type { CharGrid, Component } from 'tessera'
+import { grid } from 'graticule'
+import type { CharGrid, Component } from 'graticule'
 
 class ProgressBar implements Component {
   private value: number  // 0-100
@@ -50,8 +50,8 @@ class ProgressBar implements Component {
 Custom components can use built-in components internally:
 
 ```ts
-import { Box, Text, Row, Col, grid } from 'tessera'
-import type { CharGrid, Component } from 'tessera'
+import { Box, Text, Row, Col, grid } from 'graticule'
+import type { CharGrid, Component } from 'graticule'
 
 class StatusCard implements Component {
   private title: string
@@ -80,7 +80,7 @@ class StatusCard implements Component {
 Add `onClick` and `hitTest` for click handling, and expose `bounds` so layout containers can set your position:
 
 ```ts
-import type { CharGrid, Component, Bounds } from 'tessera'
+import type { CharGrid, Component, Bounds } from 'graticule'
 
 class Toggle implements Component {
   public bounds?: Bounds

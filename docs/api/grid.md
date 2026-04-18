@@ -3,7 +3,7 @@
 Utility module for creating and manipulating character grids.
 
 ```ts
-import { grid } from 'tessera'
+import { grid } from 'graticule'
 ```
 
 ## Functions

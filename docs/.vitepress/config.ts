@@ -1,13 +1,13 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Tessera',
+  title: 'Graticule',
   description: 'Browser-canvas ASCII component framework',
-  base: '/tessera/',
+  base: '/graticule/',
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/' },
-      { text: 'API', link: '/api/tessera' },
+      { text: 'API', link: '/api/graticule' },
       { text: 'Examples', link: '/examples/' },
     ],
     sidebar: {
@@ -30,7 +30,7 @@ export default defineConfig({
         {
           text: 'API Reference',
           items: [
-            { text: 'tessera()', link: '/api/tessera' },
+            { text: 'graticule()', link: '/api/graticule' },
             { text: 'App', link: '/api/app' },
             { text: 'Screen', link: '/api/screen' },
             { text: 'grid', link: '/api/grid' },
@@ -50,7 +50,7 @@ export default defineConfig({
       ],
     },
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/jakekidd/tessera' },
+      { icon: 'github', link: 'https://github.com/jakekidd/graticule' },
     ],
   },
 })

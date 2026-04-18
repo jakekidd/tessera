@@ -1,13 +1,13 @@
 # Layout
 
-Tessera uses `Row` and `Col` containers for flex-style layout within the character grid.
+Graticule uses `Row` and `Col` containers for flex-style layout within the character grid.
 
 ## Row (Horizontal)
 
 `Row` distributes its available width among children, similar to CSS `flex-direction: row`.
 
 ```ts
-import { Row, Box, Text } from 'tessera'
+import { Row, Box, Text } from 'graticule'
 
 // pass plain components for equal flex (each gets flex: 1)
 const row = new Row([
@@ -35,7 +35,7 @@ Fixed-width children are allocated first. Remaining space is divided among flex 
 `Col` distributes available height, same API as Row:
 
 ```ts
-import { Col, Box, Text } from 'tessera'
+import { Col, Box, Text } from 'graticule'
 
 new Col([
   { component: header, height: 3 },   // exactly 3 rows

@@ -1,6 +1,6 @@
 # Interactivity
 
-Tessera supports mouse clicks, hover highlighting, and keyboard input.
+Graticule supports mouse clicks, hover highlighting, and keyboard input.
 
 ## Click Regions
 
@@ -76,7 +76,7 @@ app.onKey((e: KeyboardEvent) => {
 Hover highlighting is enabled by default. The character under the cursor is drawn with the `hoverColor`:
 
 ```ts
-const app = tessera(canvas, {
+const app = graticule(canvas, {
   hover: true,            // default
   hoverColor: '#ffffff',  // default
 })
@@ -87,5 +87,5 @@ The cursor automatically changes to `pointer` when hovering over click regions.
 Disable hover:
 
 ```ts
-const app = tessera(canvas, { hover: false })
+const app = graticule(canvas, { hover: false })
 ```

@@ -1,30 +1,29 @@
-# Tessera
+# Graticule
 
-[![npm version](https://img.shields.io/npm/v/tessera.svg)](https://www.npmjs.com/package/tessera)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/tessera)](https://bundlephobia.com/package/tessera)
-[![license](https://img.shields.io/npm/l/tessera.svg)](https://github.com/jakekidd/tessera/blob/main/LICENSE)
-[![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://www.npmjs.com/package/tessera)
+![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+![license MIT](https://img.shields.io/badge/license-MIT-blue)
+![size](https://img.shields.io/badge/gzipped-~7%20KB-blue)
 
-Browser-canvas ASCII component framework for building retro terminal dashboards. Zero dependencies. ~19 KB.
+Browser-canvas ASCII component framework for building retro terminal dashboards. Zero dependencies. ~7 KB gzipped.
 
-Each character cell is a tessera; compose them into mosaics.
+A graticule is a grid of lines. Each character cell is a tessera; compose them into mosaics.
 
-**[Documentation](https://jakekidd.github.io/tessera/)** / **[Live Demo](https://jakekidd.github.io/tessera/demo/)** / **[Sandbox](https://jakekidd.github.io/tessera/demo/sandbox.html)**
+**[Documentation](https://jakekidd.github.io/graticule/)** / **[Live Demo](https://jakekidd.github.io/graticule/demo/)** / **[Sandbox](https://jakekidd.github.io/graticule/demo/sandbox.html)**
 
 ---
 
 ## What is this?
 
-Tessera renders a character grid to an HTML5 canvas. You get the retro terminal look with all the things you'd expect from a modern browser: DPR-aware rendering, mouse interaction, vector overlays with CRT glow effects, and a component model you can actually compose.
+Graticule renders a character grid to an HTML5 canvas. You get the retro terminal look with all the things you'd expect from a modern browser: DPR-aware rendering, mouse interaction, vector overlays with CRT glow effects, and a component model you can actually compose.
 
 ```ts
-import { tessera, grid, Box, Text } from 'tessera'
+import { graticule, grid, Box, Text } from 'graticule'
 
-const app = tessera(document.getElementById('canvas'), { fontSize: 14 })
+const app = graticule(document.getElementById('canvas'), { fontSize: 14 })
 
 app.render = (cols, rows) => {
   const g = grid.create(cols, rows)
-  const box = new Box('Hello', new Text('Welcome to Tessera'))
+  const box = new Box('Hello', new Text('Welcome to Graticule'))
   grid.overlay(g, box.render(cols, rows), 0, 0)
   return { grid: g }
 }
@@ -35,7 +34,7 @@ app.start()
 ## Install
 
 ```bash
-npm install tessera
+npm install graticule
 ```
 
 > TypeScript source is included in the package alongside compiled output. This library is still young and actively evolving, so having the source available makes debugging and contributing easier while the API stabilizes.
@@ -103,7 +102,7 @@ return { grid: g, ...overlays }
 The `grid` module has everything you need to work with character grids:
 
 ```ts
-import { grid } from 'tessera'
+import { grid } from 'graticule'
 
 const g = grid.create(80, 24)          // empty grid
 grid.write(g, 0, 0, 'Hello')          // write text
@@ -117,7 +116,7 @@ grid.collectOverlays(component, x, y) // gather vector overlays
 ## Styling
 
 ```ts
-import { palette } from 'tessera'
+import { palette } from 'graticule'
 
 // per-cell color overrides
 const colors = [
@@ -162,8 +161,8 @@ app.screen.onClick((col, row) => { tabs.hitTest(col, 0); app.update() })
 Implement the `Component` interface:
 
 ```ts
-import { grid } from 'tessera'
-import type { CharGrid, Component } from 'tessera'
+import { grid } from 'graticule'
+import type { CharGrid, Component } from 'graticule'
 
 class ProgressBar implements Component {
   constructor(private value: number) {}
@@ -183,7 +182,7 @@ new Row([new Box('Progress', new ProgressBar(75)), sidebar])
 ## Configuration
 
 ```ts
-const app = tessera(canvas, {
+const app = graticule(canvas, {
   fontSize: 14,                              // font size in px
   font: 'SF Mono, IBM Plex Mono, monospace', // monospace font
   fg: '#c0c0c0',                             // foreground color

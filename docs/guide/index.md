@@ -1,17 +1,17 @@
 # Getting Started
 
-Tessera is a browser-canvas ASCII component framework. It renders a character grid to an HTML5 canvas, giving you the retro terminal aesthetic with modern browser capabilities.
+Graticule is a browser-canvas ASCII component framework. It renders a character grid to an HTML5 canvas, giving you the retro terminal aesthetic with modern browser capabilities.
 
 ## Install
 
 ```bash
-npm install tessera
+npm install graticule
 ```
 
 Or clone the repo and import directly from source:
 
 ```ts
-import { tessera, grid, Box, Text } from 'tessera'
+import { graticule, grid, Box, Text } from 'graticule'
 ```
 
 ## Minimal Example
@@ -19,13 +19,13 @@ import { tessera, grid, Box, Text } from 'tessera'
 ```html
 <canvas id="screen" style="width:100%;height:100%"></canvas>
 <script type="module">
-import { tessera, grid, Box, Text } from 'tessera'
+import { graticule, grid, Box, Text } from 'graticule'
 
-const app = tessera(document.getElementById('screen'), { fontSize: 14 })
+const app = graticule(document.getElementById('screen'), { fontSize: 14 })
 
 app.render = (cols, rows) => {
   const g = grid.create(cols, rows)
-  const box = new Box('Hello', new Text('Welcome to Tessera'))
+  const box = new Box('Hello', new Text('Welcome to Graticule'))
   grid.overlay(g, box.render(cols, rows), 0, 0)
   return { grid: g }
 }

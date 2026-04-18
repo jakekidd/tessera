@@ -1,4 +1,4 @@
-import { tessera, grid, Tabs, palette } from '../src/index.js';
+import { graticule, grid, Tabs, palette } from '../src/index.js';
 import type { RenderResult, ClickRegion, ColorCell } from '../src/index.js';
 import { basics } from './scenes/basics.js';
 import { dashboard } from './scenes/dashboard.js';
@@ -7,7 +7,7 @@ import { catalog } from './scenes/catalog.js';
 import type { Scene } from './scenes/types.js';
 
 const canvas = document.getElementById('screen') as HTMLCanvasElement;
-const app = tessera(canvas, { fontSize: 14 });
+const app = graticule(canvas, { fontSize: 14 });
 
 const scenes: Scene[] = [basics, dashboard, streaming, catalog];
 let activeScene = 0;
@@ -30,7 +30,7 @@ app.render = (cols: number, rows: number): RenderResult => {
   const colors: ColorCell[] = [];
 
   // title
-  const title = 'TESSERA';
+  const title = 'GRATICULE';
   grid.write(g, 1, 0, title);
   for (let i = 0; i < title.length; i++) {
     colors.push({ col: 1 + i, row: 0, color: palette.BLUE });
@@ -91,7 +91,7 @@ app.screen.onClick((col, row) => {
   }
 });
 
-const title = 'TESSERA';
+const title = 'GRATICULE';
 
 // keyboard
 app.onKey((e) => {

@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: resolve(__dirname),
-  base: '/tessera/demo/',
+  base: '/graticule/demo/',
   build: {
     outDir: resolve(__dirname, '../docs/public/demo'),
     emptyOutDir: true,

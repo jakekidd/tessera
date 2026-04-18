@@ -4,12 +4,12 @@ The `App` class manages the render loop, event routing, and canvas drawing.
 
 ## Creating an App
 
-Use the `tessera()` convenience function:
+Use the `graticule()` convenience function:
 
 ```ts
-import { tessera } from 'tessera'
+import { graticule } from 'graticule'
 
-const app = tessera(canvas, {
+const app = graticule(canvas, {
   fontSize: 14,     // font size in px (default: 14)
   font: 'SF Mono',  // monospace font family
   fg: '#c0c0c0',    // foreground color
@@ -23,7 +23,7 @@ const app = tessera(canvas, {
 Or construct directly:
 
 ```ts
-import { App } from 'tessera'
+import { App } from 'graticule'
 const app = new App(canvas, config)
 ```
 

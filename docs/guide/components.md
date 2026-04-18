@@ -1,6 +1,6 @@
 # Components
 
-Tessera ships with a set of built-in components. Each implements the `Component` interface with a `render(width, height)` method that returns a `CharGrid`.
+Graticule ships with a set of built-in components. Each implements the `Component` interface with a `render(width, height)` method that returns a `CharGrid`.
 
 ## Text
 
